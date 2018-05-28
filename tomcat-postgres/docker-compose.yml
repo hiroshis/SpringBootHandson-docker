@@ -1,0 +1,28 @@
+app-web:
+   build: ./web
+   container_name: sbhandson-app
+   ports:
+      - "8081:8080"
+   links:
+     - srv-postgres
+   volumes:
+      - /usr/local/tomcat/webapps
+
+srv-postgres:
+   build: ./db
+   container_name: sbhandson-postgres
+   ports:
+      - "5432:5432"
+   volumes_from:
+      - storage-db-data
+   environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=test
+      - POSTGRES_DB=postgres_demo
+
+storage-db-data:
+   image: busybox
+   command: echo 'Container for persistance of PostgreSQL.'
+   container_name: sbhandson-db-data
+   volumes:
+      - /usr/local/var/postgres/data
